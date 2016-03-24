@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   viewBox="0 0 32 32"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="message.svg">
+  <metadata
+     id="metadata10">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs8" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="715"
+     inkscape:window-height="480"
+     id="namedview6"
+     showgrid="false"
+     inkscape:zoom="9.5356445"
+     inkscape:cx="2.9437247"
+     inkscape:cy="16"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg2" />
+  <path
+     style="text-indent:0;text-align:start;line-height:normal;text-transform:none;block-progression:tb;-inkscape-font-specification:Sans;fill:#ffffff;fill-opacity:1"
+     d="M 3 5 L 3 6 L 3 22 L 3 23 L 4 23 L 8 23 L 8 26 L 8 28.09375 L 9.625 26.78125 L 14.34375 23 L 28 23 L 29 23 L 29 22 L 29 6 L 29 5 L 28 5 L 4 5 L 3 5 z M 5 7 L 27 7 L 27 21 L 14 21 L 13.65625 21 L 13.375 21.21875 L 10 23.90625 L 10 22 L 10 21 L 9 21 L 5 21 L 5 7 z M 18.4375 9.4375 L 17 10.875 L 19.125 13 L 10 13 L 10 15 L 19.125 15 L 16.9375 17.1875 L 18.375 18.625 L 22.25 14.71875 L 22.96875 14 L 22.25 13.28125 L 18.4375 9.4375 z"
+     color="#000"
+     overflow="visible"
+     font-family="Sans"
+     id="path4" />
+</svg>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   viewBox="0 0 32 32"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="open.svg">
+  <metadata
+     id="metadata10">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs8" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="715"
+     inkscape:window-height="480"
+     id="namedview6"
+     showgrid="false"
+     inkscape:zoom="9.5356445"
+     inkscape:cx="2.9437247"
+     inkscape:cy="16"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg2" />
+  <path
+     style="text-indent:0;text-align:start;line-height:normal;text-transform:none;block-progression:tb;-inkscape-font-specification:Bitstream Vera Sans;fill:#ffffff;fill-opacity:1"
+     d="M 5 3 L 5 4 L 5 27 L 5 27.8125 L 5.78125 27.96875 L 17.78125 30.46875 L 19 30.71875 L 19 29.5 L 19 28 L 24 28 L 25 28 L 25 27 L 25 15.4375 L 26.71875 13.71875 L 27 13.40625 L 27 13 L 27 4 L 27 3 L 26 3 L 6 3 L 5 3 z M 14.125 5 L 25 5 L 25 12.5625 L 23.28125 14.28125 L 23 14.59375 L 23 15 L 23 26 L 19 26 L 19 17.5 L 19 17.09375 L 18.71875 16.78125 L 17 15.0625 L 17 6.5 L 17 5.71875 L 16.25 5.53125 L 14.125 5 z M 7 5.28125 L 15 7.28125 L 15 15.5 L 15 15.90625 L 15.28125 16.21875 L 17 17.9375 L 17 26 L 17 27 L 17 28.28125 L 7 26.1875 L 7 5.28125 z"
+     color="#000"
+     overflow="visible"
+     font-family="Bitstream Vera Sans"
+     id="path4" />
+</svg>

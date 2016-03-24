@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   viewBox="0 0 32 32"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="device.svg">
+  <metadata
+     id="metadata10">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs8" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="715"
+     inkscape:window-height="480"
+     id="namedview6"
+     showgrid="false"
+     inkscape:zoom="9.5356445"
+     inkscape:cx="2.9437247"
+     inkscape:cy="16"
+     inkscape:window-x="475"
+     inkscape:window-y="18"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg2" />
+  <path
+     style="text-indent:0;text-align:start;line-height:normal;text-transform:none;block-progression:tb;-inkscape-font-specification:Bitstream Vera Sans;fill:#ffffff;fill-opacity:1"
+     d="M 17 7 L 17 9 L 21 9 L 21 7 L 17 7 z M 5 10 L 5 12 L 9 12 L 9 10 L 5 10 z M 17 10 L 17 12 L 21 12 L 21 10 L 17 10 z M 5 13 L 5 15 L 9 15 L 9 13 L 5 13 z M 17 13 L 17 15 L 21 15 L 21 13 L 17 13 z M 23 13 L 23 15 L 27 15 L 27 13 L 23 13 z M 5 16 L 5 18 L 9 18 L 9 16 L 5 16 z M 11 16 L 11 18 L 15 18 L 15 16 L 11 16 z M 17 16 L 17 18 L 21 18 L 21 16 L 17 16 z M 23 16 L 23 18 L 27 18 L 27 16 L 23 16 z M 5 19 L 5 21 L 9 21 L 9 19 L 5 19 z M 11 19 L 11 21 L 15 21 L 15 19 L 11 19 z M 17 19 L 17 21 L 21 21 L 21 19 L 17 19 z M 23 19 L 23 21 L 27 21 L 27 19 L 23 19 z M 5 22 L 5 24 L 9 24 L 9 22 L 5 22 z M 11 22 L 11 24 L 15 24 L 15 22 L 11 22 z M 17 22 L 17 24 L 21 24 L 21 22 L 17 22 z M 23 22 L 23 24 L 27 24 L 27 22 L 23 22 z M 5 25 L 5 27 L 9 27 L 9 25 L 5 25 z M 11 25 L 11 27 L 15 27 L 15 25 L 11 25 z M 17 25 L 17 27 L 21 27 L 21 25 L 17 25 z M 23 25 L 23 27 L 27 27 L 27 25 L 23 25 z"
+     id="path4" />
+</svg>

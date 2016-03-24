@@ -1,0 +1,27 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>Icons/export.svg</file>
+        <file>Icons/save.svg</file>
+        <file>Icons/open.svg</file>
+        <file>Icons/device.svg</file>
+        <file>Icons/send.svg</file>
+        <file>Icons/sendall.svg</file>
+        <file>Icons/message.svg</file>
+        <file>Icons/exit.svg</file>
+        <file>Icons/clear.svg</file>
+        <file>Icons/preview.svg</file>
+        <file>Icons/end.svg</file>
+        <file>Icons/next.svg</file>
+        <file>Icons/pause.svg</file>
+        <file>Icons/play.svg</file>
+        <file>Icons/prev.svg</file>
+        <file>Icons/start.svg</file>
+        <file>Icons/key.svg</file>
+        <file>Icons/key-add.svg</file>
+        <file>Icons/key-del.svg</file>
+        <file>Icons/new.svg</file>
+        <file>Icons/about.svg</file>
+        <file>Icons/black/preview.svg</file>
+        <file>Icons/black/preview.png</file>
+    </qresource>
+</RCC>
