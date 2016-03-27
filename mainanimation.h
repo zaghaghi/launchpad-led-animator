@@ -9,7 +9,6 @@
 #include <QMap>
 #include <QAtomicInt>
 
-#include "sendmessage.h"
 #include "ledcolors.h"
 #include "animation.h"
 
@@ -32,10 +31,6 @@ public:
     ~MainAnimation();
 
 private slots:
-    void on_actionSend_Message_triggered();
-
-    void on_actionOutput_triggered();
-
     void on_colorList_currentRowChanged(int currentRow);
 
     void on_actionSend_triggered();
@@ -80,8 +75,7 @@ private:
     void setupUi();
     void mousePressEvent(QMouseEvent* event);
 
-    SendMessage sendMessageDialog;
-    QString currentDeviceId;
+    int currentDeviceId;
     bool livePreview;
     QGraphicsRectItem* buttons[GRID_COLS][GRID_ROWS];
 

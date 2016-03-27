@@ -13,38 +13,37 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp \
-    sendmessage.cpp \
-    animationgrid.cpp \
     ledcolors.cpp \
     launchpadcontroller.cpp \
     mainanimation.cpp \
-    selectdevice.cpp \
     frame.cpp \
     animation.cpp \
-    about.cpp
+    about.cpp \
+    RtMidi.cpp
 
 HEADERS  += \
-    sendmessage.h \
-    animationgrid.h \
     ledcolors.h \
     launchpadcontroller.h \
     mainanimation.h \
-    selectdevice.h \
     frame.h \
     animation.h \
-    about.h
+    about.h \
+    RtMidi.h
 
 FORMS    += \
-    sendmessage.ui \
-    animationgrid.ui \
     mainanimation.ui \
-    selectdevice.ui \
     about.ui
 
-include(QMidi/QMidi.pri)
+#include(QMidi/QMidi.pri)
 
 RESOURCES += \
     resource.qrc \
     qdarkstyle/style.qrc
 
 RC_FILE = resource.rc
+
+win32 {
+    LIBS += -lwinmm
+    DEFINES += __WINDOWS_MM__
+}
+

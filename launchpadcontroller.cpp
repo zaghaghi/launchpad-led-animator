@@ -5,14 +5,14 @@ LaunchpadController::LaunchpadController()
 
 }
 
-void LaunchpadController::connect(QString id)
+void LaunchpadController::connect(int id)
 {
-    midi.connect(id);
+    midi.openPort(id);
 }
 
 void LaunchpadController::disconnect()
 {
-    midi.disconnect();
+    midi.closePort();
 }
 
 void LaunchpadController::sendColor(int color, int x, int y, LayoutType layout)
@@ -36,11 +36,11 @@ void LaunchpadController::sendColor(int color, int x, int y, LayoutType layout)
 
     int velocity = color;
 
-    //midi.noteOn(key, 0, velocity);
+    std::vector<unsigned char> message;
 
-    qint32 msg = 144;
-    msg |= key << 8;
-    msg |= velocity << 16;
-    midi.sendMsg(msg);
+    message.push_back(144);
+    message.push_back(key);
+    message.push_back(velocity);
+    midi.sendMessage(&message);
 
 }

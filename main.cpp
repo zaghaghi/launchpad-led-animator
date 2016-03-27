@@ -1,8 +1,5 @@
 #include "mainanimation.h"
 #include <QApplication>
-#include <QMidi/QMidiOut.h>
-#include <QMap>
-#include <QString>
 #include <QFile>
 #include <QTextStream>
 

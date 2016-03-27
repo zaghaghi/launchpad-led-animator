@@ -282,7 +282,6 @@
     <addaction name="action_Open"/>
     <addaction name="action_Save"/>
     <addaction name="actionSave_As"/>
-    <addaction name="actionExport"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
@@ -290,7 +289,6 @@
     <property name="title">
      <string>&amp;Device</string>
     </property>
-    <addaction name="actionSend_Message"/>
     <addaction name="actionSend"/>
     <addaction name="separator"/>
     <addaction name="actionLive_Preview"/>
@@ -326,7 +324,6 @@
    <addaction name="actionNew"/>
    <addaction name="action_Open"/>
    <addaction name="action_Save"/>
-   <addaction name="actionExport"/>
    <addaction name="separator"/>
    <addaction name="actionClear"/>
    <addaction name="actionLive_Preview"/>
@@ -367,33 +364,6 @@
    </property>
    <property name="text">
     <string>E&amp;xit</string>
-   </property>
-  </action>
-  <action name="actionExport">
-   <property name="icon">
-    <iconset resource="resource.qrc">
-     <normaloff>:/icons/Icons/export.svg</normaloff>:/icons/Icons/export.svg</iconset>
-   </property>
-   <property name="text">
-    <string>Export...</string>
-   </property>
-  </action>
-  <action name="actionOutput">
-   <property name="icon">
-    <iconset resource="resource.qrc">
-     <normaloff>:/icons/Icons/device.svg</normaloff>:/icons/Icons/device.svg</iconset>
-   </property>
-   <property name="text">
-    <string>Select Device</string>
-   </property>
-  </action>
-  <action name="actionSend_Message">
-   <property name="icon">
-    <iconset resource="resource.qrc">
-     <normaloff>:/icons/Icons/message.svg</normaloff>:/icons/Icons/message.svg</iconset>
-   </property>
-   <property name="text">
-    <string>Send Custom Message...</string>
    </property>
   </action>
   <action name="actionSend">

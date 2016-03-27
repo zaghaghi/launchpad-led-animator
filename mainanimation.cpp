@@ -1,7 +1,5 @@
 #include "mainanimation.h"
 #include "ui_mainanimation.h"
-#include "sendmessage.h"
-#include "selectdevice.h"
 #include "about.h"
 #include "launchpadcontroller.h"
 #include <QMessageBox>
@@ -13,7 +11,7 @@
 MainAnimation::MainAnimation(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainAnimation),
-    currentDeviceId("0"),
+    currentDeviceId(0),
     livePreview(true),
     playInterval(0),
     currentFile("")
@@ -26,7 +24,6 @@ MainAnimation::MainAnimation(QWidget *parent) :
 MainAnimation::~MainAnimation()
 {
     delete ui;
-    //delete anim;
 }
 
 void MainAnimation::setupUi()
@@ -50,10 +47,12 @@ void MainAnimation::setupUi()
     }
     deviceCombo = new QComboBox;
     QLabel* label = new QLabel(" Device: ");
-    QMap<QString, QString> vals = QMidiOut::devices();
+    RtMidiOut midi;
+    int midiPorts = midi.getPortCount();
+
     int i = 0;
-    foreach (QString val, vals) {
-        deviceCombo->addItem(val, i++);
+    for (i = 0; i < midiPorts; ++i) {
+        deviceCombo->addItem(QString::fromStdString(midi.getPortName(i)), QVariant(i));
     }
     ui->toolBar->addWidget(label);
     ui->toolBar->addWidget(deviceCombo);
@@ -79,26 +78,12 @@ void MainAnimation::setupUi()
     ui->frameSlider->setMinimum(ui->startEdit->value());
     ui->frameSlider->setMaximum(ui->endEdit->value());
 
-    //anim = new Animation(deviceCombo->currentText(), intervalBox->value());
 }
 
-void MainAnimation::on_actionSend_Message_triggered()
-{
-    sendMessageDialog.show();
-}
-
-void MainAnimation::on_actionOutput_triggered()
-{
-    SelectDevice dialog;
-    dialog.setSelectedDevice(currentDeviceId);
-    if (dialog.exec() == QDialog::Accepted) {
-        currentDeviceId = dialog.getSelectedDevice();
-    }
-}
 
 void MainAnimation::on_deviceCombo_changed(QString)
 {
-    currentDeviceId = deviceCombo->currentData().toString();
+    currentDeviceId = deviceCombo->currentData().toInt();
 }
 
 void MainAnimation::on_colorList_currentRowChanged(int currentRow)
