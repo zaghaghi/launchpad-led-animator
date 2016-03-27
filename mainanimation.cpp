@@ -68,6 +68,14 @@ void MainAnimation::setupUi()
     intervalBox->setValue(200);
     ui->toolBar->addWidget(intervalBox);
 
+    label = new QLabel(" Layout: ");
+    layoutCombo = new QComboBox;
+    layoutCombo->addItem("Drum Rack", 0);
+    layoutCombo->addItem("X-Y", 1);
+
+    ui->toolBar->addWidget(label);
+    ui->toolBar->addWidget(layoutCombo);
+
     ui->frameSlider->setMinimum(ui->startEdit->value());
     ui->frameSlider->setMaximum(ui->endEdit->value());
 
@@ -105,12 +113,13 @@ void MainAnimation::on_actionSend_triggered()
 {
     LaunchpadController controller;
     controller.connect(currentDeviceId);
+    LaunchpadController::LayoutType layout = (LaunchpadController::LayoutType) layoutCombo->currentData().toInt();
     for (int c = 0; c < GRID_COLS; ++c) {
         for (int r = 0; r < GRID_ROWS; ++r) {
             if (buttons[c][r]) {
                 QColor cc = buttons[c][r]->brush().color();
                 int ic = colors.mapToMidiVelocity(cc);
-                controller.sendColor(ic, c, r);
+                controller.sendColor(ic, c, r, layout);
             }
         }
     }

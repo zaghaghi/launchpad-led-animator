@@ -87,6 +87,7 @@ private:
 
     LEDColors colors;
     QComboBox* deviceCombo;
+    QComboBox* layoutCombo;
     QSpinBox* intervalBox;
 
     QMap<int, Frame> frameMap;
