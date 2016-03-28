@@ -6,6 +6,7 @@ Using this application you can create LED animations for your launchpad.
  * Play animation
  * Live preview
  * Send custom midi message to device
+ * Play animation with Launchpad keys
 
 ## Screenshot
 ![Screenshot](https://raw.githubusercontent.com/zaghaghi/launchpad-led-animator/master/screenshots/mainwindow.png)
