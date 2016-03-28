@@ -31,5 +31,8 @@
         <file>Icons/edit.svg</file>
         <file>Icons/trigger.svg</file>
         <file>Icons/warning.svg</file>
+        <file>Icons/loop.svg</file>
+        <file>Icons/triggered.svg</file>
+        <file>Icons/listening.svg</file>
     </qresource>
 </RCC>

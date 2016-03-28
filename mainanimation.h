@@ -8,9 +8,12 @@
 #include <QSpinBox>
 #include <QMap>
 #include <QAtomicInt>
+#include <QMutex>
+#include <QTimer>
 
 #include "ledcolors.h"
 #include "animation.h"
+#include "launchpadcontroller.h"
 
 namespace Ui {
 class MainAnimation;
@@ -69,10 +72,13 @@ private slots:
 
     void on_actionAbout_triggered();
 
-    void on_addAnimationBtn_clicked();
+    void on_actionSet_Trigger_triggered(bool checked);
 
-    void on_removeAnimationBtn_clicked();
+    void on_actionListen_toggled(bool arg1);
 
+    void on_actionSet_Trigger_toggled(bool arg1);
+
+    void processReceivedKeys();
 private:
     Ui::MainAnimation *ui;
 
@@ -83,10 +89,11 @@ private:
     int currentDeviceId;
     bool livePreview;
     QGraphicsRectItem* buttons[GRID_COLS][GRID_ROWS];
-    QGraphicsRectItem* trigger;
+    int trigger;
 
     LEDColors colors;
-    QComboBox* deviceCombo;
+    QComboBox* outputDeviceCombo;
+    QComboBox* inputDeviceCombo;
     QComboBox* layoutCombo;
     QSpinBox* intervalBox;
 
@@ -98,6 +105,12 @@ private:
 
     void setFileName(QString filename);
     QString currentFile;
+
+    LaunchpadController controller;
+    QMutex mutex;
+    QVector<char> receivedKeys;
+    QTimer checkReceivedKeys;
+    static void onLaunchpadKeyDown(char key, void *data);
 };
 
 #endif // MAINANIMATION_H

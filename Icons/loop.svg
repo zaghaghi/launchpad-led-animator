@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   viewBox="0 0 32 32"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="loop.svg">
+  <metadata
+     id="metadata10">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs8" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="715"
+     inkscape:window-height="480"
+     id="namedview6"
+     showgrid="false"
+     inkscape:zoom="9.5356445"
+     inkscape:cx="2.9437247"
+     inkscape:cy="16"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg2" />
+  <path
+     style="text-indent:0;text-align:start;line-height:normal;text-transform:none;block-progression:tb;-inkscape-font-specification:Bitstream Vera Sans;fill:#ffffff;fill-opacity:1"
+     d="M 9 9 C 5.1456661 9 2 12.145666 2 16 C 2 19.86 5.141 23 9 23 C 11.93 23 13.71875 21.39025 15.09375 19.40625 C 14.68175 18.74525 14.34 18.09275 14 17.46875 C 12.774 19.49675 11.399 21 9 21 C 6.243 21 4 18.757 4 16 C 4 13.226334 6.2263339 11 9 11 C 10.617466 11 11.643054 11.576485 12.59375 12.5625 C 13.544446 13.548515 14.342184 14.969664 15.15625 16.46875 C 15.970316 17.967836 16.79492 19.548522 18 20.8125 C 19.20508 22.076478 20.872252 23 23 23 C 26.854334 23 30 19.854334 30 16 C 30 12.14 26.859 9 23 9 C 20.087 9 18.28425 10.56 16.90625 12.5 C 17.31725 13.148 17.69225 13.78625 18.03125 14.40625 C 19.24825 12.43825 20.609 11 23 11 C 25.757 11 28 13.243 28 16 C 28 18.773666 25.773666 21 23 21 C 21.410248 21 20.408826 20.423522 19.46875 19.4375 C 18.528674 18.451478 17.721309 17.032164 16.90625 15.53125 C 16.091191 14.030336 15.24996 12.451485 14.03125 11.1875 C 12.81254 9.923515 11.148534 9 9 9 z"
+     color="#000"
+     overflow="visible"
+     font-family="Bitstream Vera Sans"
+     id="path4" />
+</svg>

@@ -4,25 +4,31 @@
 #include <QJsonObject>
 #include <QFile>
 
-Animation::Animation(QString device, int interval):
-    device(device), interval(interval)
+Animation::Animation(QString input, QString output, int interval):
+    input(input), output(output), interval(interval), trigger(-1)
 {
-
 }
 
-Animation::Animation()
+Animation::Animation():
+    input(""),
+    output(""),
+    interval(0),
+    trigger(-1)
 {
-
 }
 
 void Animation::save(QString filename)
 {
     QJsonArray animations;
     QJsonObject animation;
-    animation.insert("device", device);
+    animation.insert("output", output);
+    animation.insert("input", input);
     animation.insert("interval", interval);
     animation.insert("start", start);
     animation.insert("end", end);
+    if (trigger >= 0) {
+        animation.insert("trigger", trigger);
+    }
     QJsonArray framesArray;
     for (int i = 0; i < frames.length(); ++i) {
         QJsonObject frameObject;
@@ -66,16 +72,17 @@ bool Animation::load(QString filename)
     }
     QJsonObject animation = animations.at(0).toObject();
 
-    if (!animation.contains("device") || !animation.contains("interval") ||
+    if (!animation.contains("output") || !animation.contains("input") || !animation.contains("interval") ||
             !animation.contains("frames")) {
         return false;
     }
 
-    device = animation["device"].toString();
+    input = animation["input"].toString();
+    output = animation["output"].toString();
     interval = animation["interval"].toInt();
     start = animation.contains("start")? animation["start"].toInt() : 0;
     end = animation.contains("end")? animation["end"].toInt() : 100;
-
+    trigger = animation.contains("trigger")? animation["trigger"].toInt(): -1;
     if (!animation["frames"].isArray()) {
         return false;
     }

@@ -262,7 +262,8 @@ QMenu::item
 
 QMenu::item:selected
 {
-    color: black;
+    color: white;
+    background-color: #cc0000;
 }
 
 QMenu::separator {

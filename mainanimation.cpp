@@ -15,7 +15,7 @@ MainAnimation::MainAnimation(QWidget *parent) :
     livePreview(true),
     playInterval(0),
     currentFile(""),
-    trigger(NULL)
+    trigger(-1)
 {
     isPlay.store(0);
     ui->setupUi(this);
@@ -46,18 +46,29 @@ void MainAnimation::setupUi()
         item->setFlags(Qt::ItemIsEnabled);
         ui->colorList->addItem(item);
     }
-    deviceCombo = new QComboBox;
-    QLabel* label = new QLabel(" Device: ");
-    RtMidiOut midi;
-    int midiPorts = midi.getPortCount();
+    outputDeviceCombo = new QComboBox;
+    QLabel* label = new QLabel(" Output: ");
+    RtMidiOut midiOut;
+    int midiPorts = midiOut.getPortCount();
 
     int i = 0;
     for (i = 0; i < midiPorts; ++i) {
-        deviceCombo->addItem(QString::fromStdString(midi.getPortName(i)), QVariant(i));
+        outputDeviceCombo->addItem(QString::fromStdString(midiOut.getPortName(i)), QVariant(i));
     }
     ui->toolBar->addWidget(label);
-    ui->toolBar->addWidget(deviceCombo);
-    QObject::connect(deviceCombo, SIGNAL(currentIndexChanged(QString)), this, SLOT(on_deviceCombo_changed(QString)));
+    ui->toolBar->addWidget(outputDeviceCombo);
+    QObject::connect(outputDeviceCombo, SIGNAL(currentIndexChanged(QString)), this, SLOT(on_deviceCombo_changed(QString)));
+
+    inputDeviceCombo = new QComboBox;
+    label = new QLabel(" Input: ");
+    RtMidiIn midiIn;
+    midiPorts = midiIn.getPortCount();
+
+    for (i = 0; i < midiPorts; ++i) {
+        inputDeviceCombo->addItem(QString::fromStdString(midiIn.getPortName(i)), QVariant(i));
+    }
+    ui->toolBar->addWidget(label);
+    ui->toolBar->addWidget(inputDeviceCombo);
 
     label = new QLabel(" Interval: ");
     ui->toolBar->addWidget(label);
@@ -79,13 +90,16 @@ void MainAnimation::setupUi()
     ui->frameSlider->setMinimum(ui->startEdit->value());
     ui->frameSlider->setMaximum(ui->endEdit->value());
 
+    checkReceivedKeys.setInterval(50);
+    connect(&checkReceivedKeys, SIGNAL(timeout()), this, SLOT(processReceivedKeys()));
+
     ui->actionNew->trigger();
 }
 
 
 void MainAnimation::on_deviceCombo_changed(QString)
 {
-    currentDeviceId = deviceCombo->currentData().toInt();
+    currentDeviceId = outputDeviceCombo->currentData().toInt();
 }
 
 void MainAnimation::on_colorList_currentRowChanged(int currentRow)
@@ -98,15 +112,27 @@ void MainAnimation::on_colorList_currentRowChanged(int currentRow)
 
 void MainAnimation::on_actionSend_triggered()
 {
-    LaunchpadController controller;
+    static QVector<int> oldColors;
+    int i;
+    if (oldColors.size() == 0) {
+        for (i = 0; i < GRID_COLS * GRID_ROWS; ++i) {
+            oldColors.push_back(12);
+        }
+    }
     controller.connect(currentDeviceId);
     LaunchpadController::LayoutType layout = (LaunchpadController::LayoutType) layoutCombo->currentData().toInt();
+
+    i = 0;
     for (int c = 0; c < GRID_COLS; ++c) {
         for (int r = 0; r < GRID_ROWS; ++r) {
             if (buttons[c][r]) {
                 QColor cc = buttons[c][r]->brush().color();
                 int ic = colors.mapToMidiVelocity(cc);
-                controller.sendColor(ic, c, r, layout);
+                if (ic != oldColors[i]) {
+                    controller.sendColor(ic, c, r, layout);
+                    oldColors[i] = ic;
+                }
+                i++;
             }
         }
     }
@@ -134,17 +160,7 @@ void MainAnimation::mousePressEvent(QMouseEvent* event)
             return;
         }
 
-        if (ui->setAnimationTriggerBtn->isChecked()) {
-            if (trigger != button) {
-                if (trigger) {
-                    trigger->setPen(QPen(QColor(0,0,0), 1));
-                }
-                button->setPen(QPen(QColor(250, 250, 250), 2));
-                trigger = button;
-            }
-            ui->setAnimationTriggerBtn->setChecked(false);
-        }
-        else if (button->brush().color() != ui->activeColorList->item(0)->backgroundColor()) {
+        if (button->brush().color() != ui->activeColorList->item(0)->backgroundColor()) {
             button->setBrush(ui->activeColorList->item(0)->background());
         }
         else {
@@ -223,11 +239,19 @@ void MainAnimation::on_play_clicked()
 void MainAnimation::play()
 {
     if (isPlay.load() == 1) {
+        int pFrame = ui->frameSlider->value();
         on_gotoNext_clicked();
+        int nFrame = ui->frameSlider->value();
         if (livePreview) {
             ui->actionSend->trigger();
         }
-        QTimer::singleShot(playInterval, this, SLOT(play()));
+        if (nFrame > pFrame || ui->actionPlay_Indifinitly->isChecked()) {
+            QTimer::singleShot(playInterval, this, SLOT(play()));
+        }
+        else {
+            ui->play->setIcon(QIcon(":/icons/Icons/play.svg"));
+            isPlay.store(0);
+        }
     }
 }
 
@@ -254,8 +278,6 @@ void MainAnimation::on_gotoEnd_clicked()
 
 void MainAnimation::on_curEdit_valueChanged(int val)
 {
-    //isPlay.store(0);
-    //ui->play->setIcon(QIcon(":/icons/Icons/play.svg"));
     next(val);
 }
 
@@ -336,7 +358,7 @@ void MainAnimation::on_action_Open_triggered()
         return;
     }
 
-    Animation anim("", 0);
+    Animation anim;
 
     if (!anim.load(filename)) {
         QMessageBox::critical(this, "Error", "Can not load or parse file.");
@@ -344,10 +366,11 @@ void MainAnimation::on_action_Open_triggered()
     }
     setFileName(filename);
     intervalBox->setValue(anim.getInterval());
-    deviceCombo->setCurrentText(anim.getDevice());
+    outputDeviceCombo->setCurrentText(anim.getOutput());
+    inputDeviceCombo->setCurrentText(anim.getInput());
     ui->startEdit->setValue(anim.getStart());
     ui->endEdit->setValue(anim.getEnd());
-
+    trigger = anim.getTrigger();
     const QVector<Frame>& frames = anim.getFrames();
     frameMap.clear();
     foreach (Frame frame, frames) {
@@ -358,6 +381,12 @@ void MainAnimation::on_action_Open_triggered()
     }
     else {
         ui->keyButton->setIcon(QIcon(":/icons/Icons/key-add.svg"));
+    }
+    if (trigger >= 0) {
+        ui->actionSet_Trigger->setIcon(QIcon(":/icons/Icons/triggered.svg"));
+    }
+    else {
+        ui->actionSet_Trigger->setIcon(QIcon(":/icons/Icons/trigger.svg"));
     }
     ui->curEdit->setValue(anim.getStart());
     next(anim.getStart());
@@ -374,9 +403,10 @@ void MainAnimation::on_action_Save_triggered()
         setFileName(filename);
     }
 
-    Animation anim(deviceCombo->currentText(), intervalBox->value());
+    Animation anim(inputDeviceCombo->currentText(), outputDeviceCombo->currentText(), intervalBox->value());
     anim.setStart(ui->startEdit->value());
     anim.setEnd(ui->endEdit->value());
+    anim.setTrigger(trigger);
     for (int fid = ui->startEdit->value(); fid <= ui->endEdit->value(); ++fid) {
         if (frameMap.contains(fid)) {
             anim.addFrame(frameMap[fid]);
@@ -418,40 +448,22 @@ void MainAnimation::on_actionNew_triggered()
     for (c = 0; c < GRID_COLS; ++c) {
         for (r = 0; r < GRID_ROWS; ++r) {
             buttons[c][r]->setBrush(QColor(0,0,0));
+            buttons[c][r]->setPen(QPen(QColor(0,0,0),1));
         }
     }
     frameMap.clear();
-
+    trigger = -1;
     ui->startEdit->setValue(0);
     ui->endEdit->setValue(100);
     ui->curEdit->setValue(0);
     ui->keyButton->setIcon(QIcon(":/icons/Icons/key-add.svg"));
-    QListWidgetItem *item = new QListWidgetItem("Animation [1]");
-    item->setFlags(item->flags() | Qt::ItemIsEditable);
-    ui->animationsList->addItem(item);
+    ui->actionSet_Trigger->setIcon(QIcon(":/icons/Icons/trigger.svg"));
 }
 
 void MainAnimation::on_actionAbout_triggered()
 {
     About about;
     about.exec();
-}
-
-void MainAnimation::on_addAnimationBtn_clicked()
-{
-    QListWidgetItem *item = new QListWidgetItem("Animation [" + QString::number(ui->animationsList->count() + 1) + "]");
-    item->setFlags(item->flags() | Qt::ItemIsEditable);
-    ui->animationsList->addItem(item);
-}
-
-void MainAnimation::on_removeAnimationBtn_clicked()
-{
-    if (ui->animationsList->count() < 2) {
-        warning("Warning", "At least one animation is needed.");
-        return;
-    }
-    int row = ui->animationsList->currentRow();
-    ui->animationsList->takeItem(row);
 }
 
 void MainAnimation::warning(const QString& title, const QString& text)
@@ -464,3 +476,72 @@ void MainAnimation::warning(const QString& title, const QString& text)
     msgBox.setText(text);
     msgBox.exec();
 }
+
+void MainAnimation::on_actionSet_Trigger_triggered(bool checked)
+{
+    if (!checked) {
+        ui->actionSet_Trigger->setIcon(QIcon(":/icons/Icons/trigger.svg"));
+    }
+}
+
+void MainAnimation::on_actionSet_Trigger_toggled(bool toggled)
+{
+    ui->actionListen->setEnabled(!toggled);
+    if (toggled) {
+        controller.startListen(inputDeviceCombo->currentData().toInt(),
+                               (LaunchpadController::LayoutType) layoutCombo->currentData().toInt(),
+                               onLaunchpadKeyDown, this);
+        checkReceivedKeys.start();
+    }
+    else {
+        controller.stopListen();
+        checkReceivedKeys.stop();
+    }
+}
+
+void MainAnimation::processReceivedKeys()
+{
+    mutex.lock();
+    if (receivedKeys.size() > 0) {
+        char key = receivedKeys.front();
+        receivedKeys.clear();
+        if (ui->actionSet_Trigger->isChecked()) {
+            ui->actionSet_Trigger->setChecked(false);
+            ui->actionSet_Trigger->setIcon(QIcon(":/icons/Icons/triggered.svg"));
+            trigger = key;
+        }
+        else if (ui->actionListen->isChecked()) {
+            if (trigger == (int)key && isPlay.load() == 0) {
+                ui->curEdit->setValue(ui->startEdit->value());
+                on_play_clicked();
+            }
+        }
+    }
+    mutex.unlock();
+}
+
+void MainAnimation::on_actionListen_toggled(bool toggled)
+{
+    ui->actionSet_Trigger->setEnabled(!toggled);
+    if (toggled) {
+        controller.startListen(inputDeviceCombo->currentData().toInt(),
+                               (LaunchpadController::LayoutType) layoutCombo->currentData().toInt(),
+                               onLaunchpadKeyDown, this);
+        checkReceivedKeys.start();
+        ui->actionListen->setIcon(QIcon(":/icons/Icons/listening.svg"));
+    }
+    else {
+        controller.stopListen();
+        checkReceivedKeys.stop();
+        ui->actionListen->setIcon(QIcon(":/icons/Icons/listen.svg"));
+    }
+}
+
+void MainAnimation::onLaunchpadKeyDown(char key, void *data)
+{
+    MainAnimation* thiz = (MainAnimation*) data;
+    thiz->mutex.lock();
+    thiz->receivedKeys.push_back(key);
+    thiz->mutex.unlock();
+}
+
