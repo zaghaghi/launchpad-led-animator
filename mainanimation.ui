@@ -7,8 +7,14 @@
     <x>0</x>
     <y>0</y>
     <width>1200</width>
-    <height>800</height>
+    <height>900</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>LaunchPad LED Animator</string>
@@ -18,7 +24,7 @@
     <normaloff>:/icons/Icons/black/preview.png</normaloff>:/icons/Icons/black/preview.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout_2">
+   <layout class="QVBoxLayout" name="verticalLayout_3">
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
@@ -36,6 +42,9 @@
             <width>48</width>
             <height>30</height>
            </size>
+          </property>
+          <property name="statusTip">
+           <string>This is current color.</string>
           </property>
           <property name="spacing">
            <number>2</number>
@@ -76,6 +85,9 @@
             <height>16777215</height>
            </size>
           </property>
+          <property name="statusTip">
+           <string>Click to change current color.</string>
+          </property>
           <property name="spacing">
            <number>2</number>
           </property>
@@ -87,7 +99,125 @@
        </layout>
       </item>
       <item>
-       <widget class="QGraphicsView" name="buttonGrid"/>
+       <widget class="QGraphicsView" name="buttonGrid">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="statusTip">
+         <string>Select rectangles to color them.</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QListWidget" name="animationsList">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>350</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="statusTip">
+         <string>Animations list.</string>
+        </property>
+        <property name="alternatingRowColors">
+         <bool>true</bool>
+        </property>
+        <property name="selectionBehavior">
+         <enum>QAbstractItemView::SelectRows</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <property name="sizeConstraint">
+         <enum>QLayout::SetNoConstraint</enum>
+        </property>
+        <item>
+         <widget class="QToolButton" name="addAnimationBtn">
+          <property name="statusTip">
+           <string>Add a new animation</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset resource="resource.qrc">
+            <normaloff>:/icons/Icons/plus-1.svg</normaloff>:/icons/Icons/plus-1.svg</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>24</width>
+            <height>24</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QToolButton" name="setAnimationTriggerBtn">
+          <property name="statusTip">
+           <string>Set animation trigger.</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset resource="resource.qrc">
+            <normaloff>:/icons/Icons/trigger.svg</normaloff>:/icons/Icons/trigger.svg</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>24</width>
+            <height>24</height>
+           </size>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QToolButton" name="removeAnimationBtn">
+          <property name="statusTip">
+           <string>Remove selected Animation</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset resource="resource.qrc">
+            <normaloff>:/icons/Icons/minus-1.svg</normaloff>:/icons/Icons/minus-1.svg</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>24</width>
+            <height>24</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
       </item>
      </layout>
     </item>
@@ -95,6 +225,9 @@
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <widget class="QSpinBox" name="startEdit">
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
         <property name="buttonSymbols">
          <enum>QAbstractSpinBox::NoButtons</enum>
         </property>
@@ -169,6 +302,9 @@
       </item>
       <item>
        <widget class="QSpinBox" name="curEdit">
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
         <property name="buttonSymbols">
          <enum>QAbstractSpinBox::NoButtons</enum>
         </property>
@@ -243,6 +379,9 @@
       </item>
       <item>
        <widget class="QSpinBox" name="endEdit">
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
         <property name="buttonSymbols">
          <enum>QAbstractSpinBox::NoButtons</enum>
         </property>
@@ -292,6 +431,7 @@
     <addaction name="actionSend"/>
     <addaction name="separator"/>
     <addaction name="actionLive_Preview"/>
+    <addaction name="actionListen"/>
    </widget>
    <widget class="QMenu" name="menuPad">
     <property name="title">
@@ -327,6 +467,7 @@
    <addaction name="separator"/>
    <addaction name="actionClear"/>
    <addaction name="actionLive_Preview"/>
+   <addaction name="actionListen"/>
    <addaction name="actionSend"/>
    <addaction name="separator"/>
   </widget>
@@ -426,7 +567,34 @@
     <string>About</string>
    </property>
   </action>
+  <action name="actionListen">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/Icons/listen.svg</normaloff>:/icons/Icons/listen.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Listen</string>
+   </property>
+  </action>
  </widget>
+ <tabstops>
+  <tabstop>curEdit</tabstop>
+  <tabstop>startEdit</tabstop>
+  <tabstop>endEdit</tabstop>
+  <tabstop>play</tabstop>
+  <tabstop>keyButton</tabstop>
+  <tabstop>gotoPrev</tabstop>
+  <tabstop>gotoStart</tabstop>
+  <tabstop>gotoNext</tabstop>
+  <tabstop>gotoEnd</tabstop>
+  <tabstop>frameSlider</tabstop>
+  <tabstop>buttonGrid</tabstop>
+  <tabstop>activeColorList</tabstop>
+  <tabstop>colorList</tabstop>
+ </tabstops>
  <resources>
   <include location="resource.qrc"/>
  </resources>

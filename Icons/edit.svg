@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   viewBox="0 0 32 32"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="edit.svg">
+  <metadata
+     id="metadata10">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs8" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="715"
+     inkscape:window-height="480"
+     id="namedview6"
+     showgrid="false"
+     inkscape:zoom="9.5356445"
+     inkscape:cx="2.9437247"
+     inkscape:cy="16"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg2" />
+  <path
+     style="text-indent:0;text-align:start;line-height:normal;text-transform:none;block-progression:tb;-inkscape-font-specification:Sans;fill:#ffffff;fill-opacity:1"
+     d="M 2 10 L 2 11 L 2 21 L 2 22 L 3 22 L 11.78125 22 L 20.90625 31.09375 C 22.059803 32.247303 23.940197 32.247303 25.09375 31.09375 C 26.247303 29.940197 26.247303 28.059803 25.09375 26.90625 L 20.1875 22 L 29 22 L 30 22 L 30 21 L 30 11 L 30 10 L 29 10 L 3 10 L 2 10 z M 4 12 L 28 12 L 28 20 L 18.21875 20 L 15.21875 17 L 15 16.78125 L 14.6875 16.71875 L 11.1875 16.03125 L 9.71875 15.71875 L 10.03125 17.1875 L 10.59375 20 L 4 20 L 4 12 z M 12.28125 18.28125 L 14 18.625 L 23.6875 28.3125 C 24.133947 28.758947 24.133947 29.241053 23.6875 29.6875 C 23.241053 30.133947 22.758947 30.133947 22.3125 29.6875 L 22.25 29.625 L 12.625 20 L 12.28125 18.28125 z"
+     color="#000"
+     overflow="visible"
+     font-family="Sans"
+     id="path4" />
+</svg>

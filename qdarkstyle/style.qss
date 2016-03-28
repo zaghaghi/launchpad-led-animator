@@ -60,7 +60,7 @@ QWidget:item:hover
 
 QWidget:item:selected
 {
-    background-color: #ff0000;
+    background-color: #302F2F;
 }
 
 QCheckBox

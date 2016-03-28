@@ -69,15 +69,21 @@ private slots:
 
     void on_actionAbout_triggered();
 
+    void on_addAnimationBtn_clicked();
+
+    void on_removeAnimationBtn_clicked();
+
 private:
     Ui::MainAnimation *ui;
 
     void setupUi();
     void mousePressEvent(QMouseEvent* event);
+    void warning(const QString& title, const QString& text);
 
     int currentDeviceId;
     bool livePreview;
     QGraphicsRectItem* buttons[GRID_COLS][GRID_ROWS];
+    QGraphicsRectItem* trigger;
 
     LEDColors colors;
     QComboBox* deviceCombo;

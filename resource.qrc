@@ -23,5 +23,13 @@
         <file>Icons/about.svg</file>
         <file>Icons/black/preview.svg</file>
         <file>Icons/black/preview.png</file>
+        <file>Icons/minus-1.svg</file>
+        <file>Icons/minus-2.svg</file>
+        <file>Icons/plus-1.svg</file>
+        <file>Icons/plus-2.svg</file>
+        <file>Icons/listen.svg</file>
+        <file>Icons/edit.svg</file>
+        <file>Icons/trigger.svg</file>
+        <file>Icons/warning.svg</file>
     </qresource>
 </RCC>

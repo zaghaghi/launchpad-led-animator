@@ -14,7 +14,8 @@ MainAnimation::MainAnimation(QWidget *parent) :
     currentDeviceId(0),
     livePreview(true),
     playInterval(0),
-    currentFile("")
+    currentFile(""),
+    trigger(NULL)
 {
     isPlay.store(0);
     ui->setupUi(this);
@@ -78,6 +79,7 @@ void MainAnimation::setupUi()
     ui->frameSlider->setMinimum(ui->startEdit->value());
     ui->frameSlider->setMaximum(ui->endEdit->value());
 
+    ui->actionNew->trigger();
 }
 
 
@@ -131,7 +133,18 @@ void MainAnimation::mousePressEvent(QMouseEvent* event)
         if (button == NULL) {
             return;
         }
-        if (button->brush().color() != ui->activeColorList->item(0)->backgroundColor()) {
+
+        if (ui->setAnimationTriggerBtn->isChecked()) {
+            if (trigger != button) {
+                if (trigger) {
+                    trigger->setPen(QPen(QColor(0,0,0), 1));
+                }
+                button->setPen(QPen(QColor(250, 250, 250), 2));
+                trigger = button;
+            }
+            ui->setAnimationTriggerBtn->setChecked(false);
+        }
+        else if (button->brush().color() != ui->activeColorList->item(0)->backgroundColor()) {
             button->setBrush(ui->activeColorList->item(0)->background());
         }
         else {
@@ -413,10 +426,41 @@ void MainAnimation::on_actionNew_triggered()
     ui->endEdit->setValue(100);
     ui->curEdit->setValue(0);
     ui->keyButton->setIcon(QIcon(":/icons/Icons/key-add.svg"));
+    QListWidgetItem *item = new QListWidgetItem("Animation [1]");
+    item->setFlags(item->flags() | Qt::ItemIsEditable);
+    ui->animationsList->addItem(item);
 }
 
 void MainAnimation::on_actionAbout_triggered()
 {
     About about;
     about.exec();
+}
+
+void MainAnimation::on_addAnimationBtn_clicked()
+{
+    QListWidgetItem *item = new QListWidgetItem("Animation [" + QString::number(ui->animationsList->count() + 1) + "]");
+    item->setFlags(item->flags() | Qt::ItemIsEditable);
+    ui->animationsList->addItem(item);
+}
+
+void MainAnimation::on_removeAnimationBtn_clicked()
+{
+    if (ui->animationsList->count() < 2) {
+        warning("Warning", "At least one animation is needed.");
+        return;
+    }
+    int row = ui->animationsList->currentRow();
+    ui->animationsList->takeItem(row);
+}
+
+void MainAnimation::warning(const QString& title, const QString& text)
+{
+    QMessageBox msgBox;
+    msgBox.setParent(this);
+    msgBox.setIconPixmap(QPixmap(":/icons/Icons/warning.svg"));
+    msgBox.setWindowTitle(title);
+    msgBox.setWindowModality(Qt::ApplicationModal);
+    msgBox.setText(text);
+    msgBox.exec();
 }
