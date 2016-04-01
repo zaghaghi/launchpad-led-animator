@@ -8,14 +8,15 @@
 #include <QTimer>
 #include <QFileInfo>
 
-MainAnimation::MainAnimation(QWidget *parent) :
+MainAnimation::MainAnimation(LaunchpadController* controller, MainWindow *parent) :
     QMainWindow(parent),
     ui(new Ui::MainAnimation),
-    currentDeviceId(0),
     livePreview(true),
     playInterval(0),
     currentFile(""),
-    trigger(-1)
+    trigger(-1),
+    controller(controller),
+    parent(parent)
 {
     isPlay.store(0);
     ui->setupUi(this);
@@ -29,6 +30,9 @@ MainAnimation::~MainAnimation()
 
 void MainAnimation::setupUi()
 {
+    removeToolBar(ui->toolBar);
+    addToolBar(Qt::LeftToolBarArea, ui->toolBar);
+    ui->toolBar->show();
     QGraphicsScene *scene = new QGraphicsScene();
     int r,c;
     for (c = 0; c < GRID_COLS; ++c) {
@@ -46,60 +50,100 @@ void MainAnimation::setupUi()
         item->setFlags(Qt::ItemIsEnabled);
         ui->colorList->addItem(item);
     }
-    outputDeviceCombo = new QComboBox;
-    QLabel* label = new QLabel(" Output: ");
-    RtMidiOut midiOut;
-    int midiPorts = midiOut.getPortCount();
-
-    int i = 0;
-    for (i = 0; i < midiPorts; ++i) {
-        outputDeviceCombo->addItem(QString::fromStdString(midiOut.getPortName(i)), QVariant(i));
-    }
-    ui->toolBar->addWidget(label);
-    ui->toolBar->addWidget(outputDeviceCombo);
-    QObject::connect(outputDeviceCombo, SIGNAL(currentIndexChanged(QString)), this, SLOT(on_deviceCombo_changed(QString)));
-
-    inputDeviceCombo = new QComboBox;
-    label = new QLabel(" Input: ");
-    RtMidiIn midiIn;
-    midiPorts = midiIn.getPortCount();
-
-    for (i = 0; i < midiPorts; ++i) {
-        inputDeviceCombo->addItem(QString::fromStdString(midiIn.getPortName(i)), QVariant(i));
-    }
-    ui->toolBar->addWidget(label);
-    ui->toolBar->addWidget(inputDeviceCombo);
-
-    label = new QLabel(" Interval: ");
-    ui->toolBar->addWidget(label);
-    intervalBox = new QSpinBox();
-    intervalBox->setButtonSymbols(QSpinBox::NoButtons);
-    intervalBox->setMaximum(10000);
-    intervalBox->setMinimum(1);
-    intervalBox->setValue(200);
-    ui->toolBar->addWidget(intervalBox);
-
-    label = new QLabel(" Layout: ");
-    layoutCombo = new QComboBox;
-    layoutCombo->addItem("Drum Rack", 0);
-    layoutCombo->addItem("X-Y", 1);
-
-    ui->toolBar->addWidget(label);
-    ui->toolBar->addWidget(layoutCombo);
-
     ui->frameSlider->setMinimum(ui->startEdit->value());
     ui->frameSlider->setMaximum(ui->endEdit->value());
 
     checkReceivedKeys.setInterval(50);
-    connect(&checkReceivedKeys, SIGNAL(timeout()), this, SLOT(processReceivedKeys()));
+    QObject::connect(&checkReceivedKeys, SIGNAL(timeout()), this, SLOT(processReceivedKeys()));
 
     ui->actionNew->trigger();
 }
 
-
-void MainAnimation::on_deviceCombo_changed(QString)
+void MainAnimation::save()
 {
-    currentDeviceId = outputDeviceCombo->currentData().toInt();
+    QString filename = currentFile;
+    if (filename.isEmpty()) {
+        filename = QFileDialog::getSaveFileName(this, "Save...", QString(), "LaunchPad Animation (*.lpa)");
+        if (filename.isEmpty()) {
+            return;
+        }
+    }
+    setFileName(filename);
+
+    //Animation anim(inputDeviceCombo->currentText(), outputDeviceCombo->currentText(), intervalBox->value());
+    Animation anim("", "", 200);
+    anim.setStart(ui->startEdit->value());
+    anim.setEnd(ui->endEdit->value());
+    anim.setTrigger(trigger);
+    for (int fid = ui->startEdit->value(); fid <= ui->endEdit->value(); ++fid) {
+        if (frameMap.contains(fid)) {
+            anim.addFrame(frameMap[fid]);
+        }
+    }
+
+    anim.save(filename);
+}
+
+void MainAnimation::open()
+{
+    QString filename = QFileDialog::getOpenFileName(this, "Open...", QString(), "LaunchPad Animation (*.lpa)");
+    if (filename.isEmpty()) {
+        return;
+    }
+
+    Animation anim;
+
+    if (!anim.load(filename)) {
+        QMessageBox::critical(this, "Error", "Can not load or parse file.");
+        return;
+    }
+    setFileName(filename);
+    //intervalBox->setValue(anim.getInterval());
+    //outputDeviceCombo->setCurrentText(anim.getOutput());
+    //inputDeviceCombo->setCurrentText(anim.getInput());
+    ui->startEdit->setValue(anim.getStart());
+    ui->endEdit->setValue(anim.getEnd());
+    trigger = anim.getTrigger();
+    const QVector<Frame>& frames = anim.getFrames();
+    frameMap.clear();
+    foreach (Frame frame, frames) {
+        frameMap[frame.getTime()] = frame;
+    }
+    if (frameMap.contains(anim.getStart())) {
+        ui->keyButton->setIcon(QIcon(":/icons/Icons/key-del.svg"));
+    }
+    else {
+        ui->keyButton->setIcon(QIcon(":/icons/Icons/key-add.svg"));
+    }
+    if (trigger >= 0) {
+        ui->actionSet_Trigger->setIcon(QIcon(":/icons/Icons/triggered.svg"));
+    }
+    else {
+        ui->actionSet_Trigger->setIcon(QIcon(":/icons/Icons/trigger.svg"));
+    }
+    ui->curEdit->setValue(anim.getStart());
+    next(anim.getStart());
+}
+
+void MainAnimation::saveas()
+{
+    QString filename = QFileDialog::getSaveFileName(this, "Save as...", QString(), "LaunchPad Animation (*.lpa)");
+    if (filename.isEmpty()) {
+        return;
+    }
+    setFileName(filename);
+    save();
+}
+#include <iostream>
+
+void MainAnimation::doclose()
+{
+    std::cout << windowTitle().toStdString() << std::endl;
+    if (windowTitle().endsWith('*')) {
+        if (QMessageBox::question(this, "Unsaved work", "Do you want to save before close?") == QMessageBox::Yes) {
+            save();
+        }
+    }
 }
 
 void MainAnimation::on_colorList_currentRowChanged(int currentRow)
@@ -119,8 +163,8 @@ void MainAnimation::on_actionSend_triggered()
             oldColors.push_back(12);
         }
     }
-    controller.connect(currentDeviceId);
-    LaunchpadController::LayoutType layout = (LaunchpadController::LayoutType) layoutCombo->currentData().toInt();
+    controller->connect(parent->getOutputDeviceId());
+    LaunchpadController::LayoutType layout = (LaunchpadController::LayoutType) parent->getLayout();
 
     i = 0;
     for (int c = 0; c < GRID_COLS; ++c) {
@@ -129,14 +173,14 @@ void MainAnimation::on_actionSend_triggered()
                 QColor cc = buttons[c][r]->brush().color();
                 int ic = colors.mapToMidiVelocity(cc);
                 if (ic != oldColors[i]) {
-                    controller.sendColor(ic, c, r, layout);
+                    controller->sendColor(ic, c, r, layout);
                     oldColors[i] = ic;
                 }
                 i++;
             }
         }
     }
-    controller.disconnect();
+    controller->disconnect();
 }
 
 void MainAnimation::mousePressEvent(QMouseEvent* event)
@@ -166,6 +210,7 @@ void MainAnimation::mousePressEvent(QMouseEvent* event)
         else {
             button->setBrush(QColor(0,0,0));
         }
+        setFileName(currentFile, false);
         if (livePreview) {
             ui->actionSend->trigger();
         }
@@ -227,7 +272,7 @@ void MainAnimation::on_play_clicked()
     if (isPlay.load() == 0) {
         ui->play->setIcon(QIcon(":/icons/Icons/pause.svg"));
         isPlay.store(1);
-        playInterval = intervalBox->value();
+        playInterval = parent->getInterval();
         QTimer::singleShot(playInterval, this, SLOT(play()));
     }
     else {
@@ -351,119 +396,43 @@ void MainAnimation::on_keyButton_clicked()
     }
 }
 
-void MainAnimation::on_action_Open_triggered()
+void MainAnimation::setFileName(QString filename, bool saved)
 {
-    QString filename = QFileDialog::getOpenFileName(this, "Open...", QString(), "LaunchPad Animation (*.lpa)");
-    if (filename.isEmpty()) {
-        return;
+    if (!filename.startsWith("Unsaved")) {
+        currentFile = filename;
     }
-
-    Animation anim;
-
-    if (!anim.load(filename)) {
-        QMessageBox::critical(this, "Error", "Can not load or parse file.");
-        return;
-    }
-    setFileName(filename);
-    intervalBox->setValue(anim.getInterval());
-    outputDeviceCombo->setCurrentText(anim.getOutput());
-    inputDeviceCombo->setCurrentText(anim.getInput());
-    ui->startEdit->setValue(anim.getStart());
-    ui->endEdit->setValue(anim.getEnd());
-    trigger = anim.getTrigger();
-    const QVector<Frame>& frames = anim.getFrames();
-    frameMap.clear();
-    foreach (Frame frame, frames) {
-        frameMap[frame.getTime()] = frame;
-    }
-    if (frameMap.contains(anim.getStart())) {
-        ui->keyButton->setIcon(QIcon(":/icons/Icons/key-del.svg"));
-    }
-    else {
-        ui->keyButton->setIcon(QIcon(":/icons/Icons/key-add.svg"));
-    }
-    if (trigger >= 0) {
-        ui->actionSet_Trigger->setIcon(QIcon(":/icons/Icons/triggered.svg"));
-    }
-    else {
-        ui->actionSet_Trigger->setIcon(QIcon(":/icons/Icons/trigger.svg"));
-    }
-    ui->curEdit->setValue(anim.getStart());
-    next(anim.getStart());
-}
-
-void MainAnimation::on_action_Save_triggered()
-{
-    QString filename = currentFile;
-    if (filename.isEmpty()) {
-        filename = QFileDialog::getSaveFileName(this, "Save...", QString(), "LaunchPad Animation (*.lpa)");
-        if (filename.isEmpty()) {
-            return;
-        }
-        setFileName(filename);
-    }
-
-    Animation anim(inputDeviceCombo->currentText(), outputDeviceCombo->currentText(), intervalBox->value());
-    anim.setStart(ui->startEdit->value());
-    anim.setEnd(ui->endEdit->value());
-    anim.setTrigger(trigger);
-    for (int fid = ui->startEdit->value(); fid <= ui->endEdit->value(); ++fid) {
-        if (frameMap.contains(fid)) {
-            anim.addFrame(frameMap[fid]);
-        }
-    }
-
-    anim.save(filename);
-}
-
-void MainAnimation::on_actionSave_As_triggered()
-{
-    QString filename = QFileDialog::getSaveFileName(this, "Save as...", QString(), "LaunchPad Animation (*.lpa)");
-    if (filename.isEmpty()) {
-        return;
-    }
-    setFileName(filename);
-    ui->action_Save->trigger();
-
-}
-
-void MainAnimation::setFileName(QString filename)
-{
-    currentFile = filename;
     if (!filename.isEmpty()) {
         QFileInfo fileInfo(filename);
-        setWindowTitle("LaunchPad LED Animator - " + fileInfo.fileName());
+        setWindowTitle(fileInfo.fileName() + (saved?QString():QString(" *")));
     }
     else {
-        setWindowTitle("LaunchPad LED Animator");
+        setWindowTitle(saved?"Unsaved":"Unsaved *");
     }
 }
 
-void MainAnimation::on_actionNew_triggered()
-{
-    isPlay.store(0);
-    ui->play->setIcon(QIcon(":/icons/Icons/play.svg"));
-    setFileName("");
-    int r,c;
-    for (c = 0; c < GRID_COLS; ++c) {
-        for (r = 0; r < GRID_ROWS; ++r) {
-            buttons[c][r]->setBrush(QColor(0,0,0));
-            buttons[c][r]->setPen(QPen(QColor(0,0,0),1));
-        }
-    }
-    frameMap.clear();
-    trigger = -1;
-    ui->startEdit->setValue(0);
-    ui->endEdit->setValue(100);
-    ui->curEdit->setValue(0);
-    ui->keyButton->setIcon(QIcon(":/icons/Icons/key-add.svg"));
-    ui->actionSet_Trigger->setIcon(QIcon(":/icons/Icons/trigger.svg"));
-}
+//void MainAnimation::on_actionNew_triggered()
+//{
+//    isPlay.store(0);
+//    ui->play->setIcon(QIcon(":/icons/Icons/play.svg"));
+//    setFileName("");
+//    int r,c;
+//    for (c = 0; c < GRID_COLS; ++c) {
+//        for (r = 0; r < GRID_ROWS; ++r) {
+//            buttons[c][r]->setBrush(QColor(0,0,0));
+//            buttons[c][r]->setPen(QPen(QColor(0,0,0),1));
+//        }
+//    }
+//    frameMap.clear();
+//    trigger = -1;
+//    ui->startEdit->setValue(0);
+//    ui->endEdit->setValue(100);
+//    ui->curEdit->setValue(0);
+//    ui->keyButton->setIcon(QIcon(":/icons/Icons/key-add.svg"));
+//    ui->actionSet_Trigger->setIcon(QIcon(":/icons/Icons/trigger.svg"));
+//}
 
 void MainAnimation::on_actionAbout_triggered()
 {
-    About about;
-    about.exec();
 }
 
 void MainAnimation::warning(const QString& title, const QString& text)
@@ -488,13 +457,13 @@ void MainAnimation::on_actionSet_Trigger_toggled(bool toggled)
 {
     ui->actionListen->setEnabled(!toggled);
     if (toggled) {
-        controller.startListen(inputDeviceCombo->currentData().toInt(),
-                               (LaunchpadController::LayoutType) layoutCombo->currentData().toInt(),
+        controller->startListen(parent->getInputDeviceId(),
+                               (LaunchpadController::LayoutType) parent->getLayout(),
                                onLaunchpadKeyDown, this);
         checkReceivedKeys.start();
     }
     else {
-        controller.stopListen();
+        controller->stopListen();
         checkReceivedKeys.stop();
     }
 }
@@ -524,14 +493,14 @@ void MainAnimation::on_actionListen_toggled(bool toggled)
 {
     ui->actionSet_Trigger->setEnabled(!toggled);
     if (toggled) {
-        controller.startListen(inputDeviceCombo->currentData().toInt(),
-                               (LaunchpadController::LayoutType) layoutCombo->currentData().toInt(),
+        controller->startListen(parent->getInputDeviceId(),
+                               (LaunchpadController::LayoutType) parent->getInterval(),
                                onLaunchpadKeyDown, this);
         checkReceivedKeys.start();
         ui->actionListen->setIcon(QIcon(":/icons/Icons/listening.svg"));
     }
     else {
-        controller.stopListen();
+        controller->stopListen();
         checkReceivedKeys.stop();
         ui->actionListen->setIcon(QIcon(":/icons/Icons/listen.svg"));
     }

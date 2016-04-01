@@ -19,7 +19,8 @@ SOURCES += main.cpp \
     frame.cpp \
     animation.cpp \
     about.cpp \
-    RtMidi.cpp
+    RtMidi.cpp \
+    mainwindow.cpp
 
 HEADERS  += \
     ledcolors.h \
@@ -28,11 +29,13 @@ HEADERS  += \
     frame.h \
     animation.h \
     about.h \
-    RtMidi.h
+    RtMidi.h \
+    mainwindow.h
 
 FORMS    += \
     mainanimation.ui \
-    about.ui
+    about.ui \
+    mainwindow.ui
 
 #include(QMidi/QMidi.pri)
 

@@ -14,7 +14,7 @@
 #include "ledcolors.h"
 #include "animation.h"
 #include "launchpadcontroller.h"
-
+#include "mainwindow.h"
 namespace Ui {
 class MainAnimation;
 }
@@ -30,9 +30,13 @@ class MainAnimation : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainAnimation(QWidget *parent = 0);
+    explicit MainAnimation(LaunchpadController* controller, MainWindow *parent);
     ~MainAnimation();
 
+    void save();
+    void open();
+    void saveas();
+    void doclose();
 private slots:
     void on_colorList_currentRowChanged(int currentRow);
 
@@ -41,9 +45,6 @@ private slots:
     void on_actionClear_triggered();
 
     void on_actionLive_Preview_triggered(bool checked);
-
-    void on_deviceCombo_changed(QString);
-    void on_action_Save_triggered();
 
     void on_startEdit_valueChanged(int arg1);
 
@@ -64,11 +65,6 @@ private slots:
     void on_keyButton_clicked();
 
     void play();
-    void on_action_Open_triggered();
-
-    void on_actionSave_As_triggered();
-
-    void on_actionNew_triggered();
 
     void on_actionAbout_triggered();
 
@@ -81,21 +77,22 @@ private slots:
     void processReceivedKeys();
 private:
     Ui::MainAnimation *ui;
+    MainWindow* parent;
 
     void setupUi();
     void mousePressEvent(QMouseEvent* event);
     void warning(const QString& title, const QString& text);
 
-    int currentDeviceId;
+    //int currentDeviceId;
     bool livePreview;
     QGraphicsRectItem* buttons[GRID_COLS][GRID_ROWS];
     int trigger;
 
     LEDColors colors;
-    QComboBox* outputDeviceCombo;
+    /*QComboBox* outputDeviceCombo;
     QComboBox* inputDeviceCombo;
     QComboBox* layoutCombo;
-    QSpinBox* intervalBox;
+    QSpinBox* intervalBox;*/
 
     QMap<int, Frame> frameMap;
 
@@ -103,14 +100,15 @@ private:
     QAtomicInt isPlay;
     int playInterval;
 
-    void setFileName(QString filename);
+    void setFileName(QString filename, bool saved = true);
     QString currentFile;
 
-    LaunchpadController controller;
+    LaunchpadController* controller;
     QMutex mutex;
     QVector<char> receivedKeys;
     QTimer checkReceivedKeys;
     static void onLaunchpadKeyDown(char key, void *data);
+
 };
 
 #endif // MAINANIMATION_H

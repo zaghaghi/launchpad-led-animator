@@ -1,4 +1,4 @@
-#include "mainanimation.h"
+#include "mainwindow.h"
 #include <QApplication>
 #include <QFile>
 #include <QTextStream>
@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
         QTextStream ts(&f);
         qApp->setStyleSheet(ts.readAll());
     }
-    MainAnimation w;
+    MainWindow w;
     w.show();
 
     return a.exec();

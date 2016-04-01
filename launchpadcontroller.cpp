@@ -66,12 +66,12 @@ void LaunchpadController::stopListen()
     midiIn.closePort();
 }
 
-void LaunchpadController::rtCallback(double /*timeStamp*/, std::vector<unsigned char> *message, void *data)
+void LaunchpadController::rtCallback(double timeStamp, std::vector<unsigned char> *message, void *data)
 {
     LaunchpadController * thiz = (LaunchpadController*) data;
-    if (message->size() == 3 && (*message)[0] == 148) { // key down
+    if (message->size() == 3 && (message->at(0) == 148 || message->at(0) == 144) ) { // key down
         if (thiz->callback) {
-            thiz->callback((*message)[1], thiz->userData);
+            thiz->callback(message->at(1), thiz->userData);
         }
     }
 }
